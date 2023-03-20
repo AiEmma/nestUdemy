@@ -12,22 +12,25 @@ import {
 import { CreateUserDTO } from './dto/create.user.dto';
 import { UpdatePatchUserDTO } from './dto/update-patch.user.dto';
 import { UpdatePutUserDTO } from './dto/update-put.user.dto';
+import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {
+  constructor(private userService: UserService) {}
+
   @Post()
-  async create(@Body() { email, name }: CreateUserDTO) {
-    return { email, name };
+  async create(@Body() data: CreateUserDTO) {
+    return this.userService.create(data);
   }
 
   @Get()
   async findAll() {
-    return { users: [] };
+    return this.userService.findAll();
   }
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return { user: {}, id };
+    return this.userService.findOne(id);
   }
 
   @Patch(':id')
@@ -35,7 +38,7 @@ export class UserController {
     @Body() body: UpdatePatchUserDTO,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return { method: 'patch', body, id };
+    return this.userService.updatePartial(id, body);
   }
 
   @Put(':id')
@@ -43,11 +46,11 @@ export class UserController {
     @Body() body: UpdatePutUserDTO,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return { method: 'put', body, id };
+    return this.userService.update(id, body);
   }
 
   @Delete(':id')
   async deleteOne(@Param('id', ParseIntPipe) id: number) {
-    return { id };
+    return this.userService.delete(id);
   }
 }
