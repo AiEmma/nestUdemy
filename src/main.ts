@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors(); //usar quando o back esta no heroku e front no sandbox
   app.useGlobalPipes(new ValidationPipe());
   //app.useGlobalInterceptors(new LogInterceptor()); //aqui funciona globalmente
   await app.listen(3000);
