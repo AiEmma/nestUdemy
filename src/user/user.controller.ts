@@ -11,6 +11,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import { paramIdDecorator } from 'src/decorator/param-id-decorator';
 import { Roles } from 'src/decorator/roles.decorator';
 import { Role } from 'src/enums/role.enum';
@@ -29,12 +30,14 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   //@UseInterceptors(LogInterceptor) //usado aqui funciona somente nesta rota
+
   @Roles(Role.Admin, Role.User)
   @Post()
   async create(@Body() data: CreateUserDTO) {
     return this.userService.create(data);
   }
 
+  //@UseGuards(ThrottlerGuard) pode ser usado na rota que escolher como aqui, junto com os outros guards
   @Roles(Role.Admin, Role.User)
   @Get()
   async findAll() {
